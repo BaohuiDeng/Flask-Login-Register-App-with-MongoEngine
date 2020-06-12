@@ -6,54 +6,78 @@
     <div class="container">
         <form action="" method="POST">
         {{ form.csrf_token() }}
-            <div class="form-group offset-4">
-              <div class="col-5">
-                      <h2 class="title mt-3">Register</h2>
+            <div class="form-group offset-lg-2">
+
+              <div class="row">
+               
+              <div class="col-lg-5">
+                <h2 class="title mt-5 mb-3">Register</h2>
               </div>
-                <div class="col-5">
+            
+        
+              </div>
+              <div class="container ml-1 col-lg-10">
+                <hr>
+              </div>
+
+              <div class="row">
+                
+                <div class="col-lg-5 my-2">
                     <label for="">Firstname</label>
                     {{ form.firstname(class='form-control', placeholder='Please enter your firstname') }}
                     <small id="helpId" class="text-muted">Please enter your name</small>
                 </div>
-                <div class="col-5">
+                <div class="col-lg-5">
                   <label for="">Lastname</label>
                   {{ form.lastname(class='form-control', placeholder='Please enter your lastname') }}
                   <small id="helpId" class="text-muted">Please enter your lastname</small>
               </div>
-              <div class="col-5">
+            </div>
+            <div class="row">
+            
+              <div class="col-lg-5 my-2">
                 <label for="">Date Of Birth</label>
-                {{ form.dateOfBirth(class='form-control', placeholder='Please enter your Date Of Birth') }}
+                {{ form.dateOfBirth(class='form-control', placeholder='dd:mm:yy') }}
                 <small id="helpId" class="text-muted">Please enter your Date Of Birth</small>
             </div>
-                <div class="col-5">
+                <div class="col-lg-5">
                     <label for="">Email Address</label>
                     {{ form.email(class='form-control', placeholder='your@email.com') }}
                     <small id="helpId" class="text-muted">Enter your email address</small>
                 </div>
-                <div class="col-5">
+            </div>
+            <div class="row">
+
+                <div class="col-lg-5 my-2">
                   <label for="">Password</label>
                   {{ form.password(class='form-control', placeholder='Please enter your password') }}
-                  <small id="helpId" class="text-muted">Please enter your password</small>
+                  <small id="helpId" class="text-muted">Please enter your password <br> <span class="text-danger">{{msg}}<span></small>
               </div>
-              {% if form.password.errors %}
+
+
+
+              <!-- {% if form.password.errors %}
               {% for error in form.password.errors %}
                   <p class="error">{{ error }}</p>
               {% endfor %}
-          {% endif %}
+          {% endif %} -->
          
-              <div class="col-5">
+              <div class="col-lg-5">
                 <label for="">Confirm Password</label>
                 {{ form.confirmpassword(class='form-control', placeholder='Please enter your confirmpassword') }}
                 <small id="helpId" class="text-muted">Please enter your confirmpassword</small>
             </div>
             </div>
+            </div>
         
         
-            <div class="form-group row">
-              
-                <div class="col offset-4">
+            <div class="form-group">
+              <div class="row">
+
+                <div class="col offset-2 mt-2">
                     {{ form.submit(class='btn btn-primary') }}
                 </div>
+              </div>
             </div>
         </form>
     </div>

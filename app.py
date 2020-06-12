@@ -8,6 +8,7 @@ import bcrypt
 from flask_security import Security,MongoEngineUserDatastore, login_required,\
       UserMixin, RoleMixin
 from flask_security.utils import hash_password
+import re
 
 app = Flask(__name__,template_folder="templates")
 app.config['SECRET_KEY'] ='super-secret'
@@ -53,39 +54,63 @@ def register():
     form = RegisterForm() 
 
     if  request.method == 'POST':
-        existing_user = User.objects.filter(email=request.form.get("email")).first()
-        if existing_user is None:
-            user_datastore.create_user(  
-            firstname=request.form.get("firstname"),
-            lastname=request.form.get("lastname"),
-            dateOfBirth=request.form.get("dateOfBirth"),
-            email=request.form.get("email"),
-            password=hash_password(request.form.get("password")),
-            confirmpassword = hash_password(request.form.get("confirmpassword"))
-            )
-            return render_template('login.html', form = form) #redirect(url_for('profile'))
-        return render_template('loginFail.html')
+        passwordtest=request.form.get("password")
+        if len(passwordtest) < 6:
+            msg="Make sure your password is at least 6 letters"
+            return render_template('register.html',form= form, msg=msg )
+        elif re.search('[0-9]',passwordtest) is None:
+            msg="Make sure your password has a number in it"
+            return render_template('register.html',form= form, msg=msg )
+        elif re.search('[A-Z]',passwordtest) is None: 
+            msg="Make sure your password has a capital letter in it"
+            return render_template('register.html', form = form, msg=msg)
+        elif re.search('[a-z]',passwordtest) is None: 
+            msg="Make sure your password has a small letter in it"
+            return render_template('register.html', form= form, msg=msg)
+        else:
+            existing_user = User.objects.filter(email=request.form.get("email")).first()
+            if existing_user is None:
+                if passwordtest == request.form.get('confirmpassword'):
+
+                    user_datastore.create_user(  
+                    firstname=request.form.get("firstname"),
+                    lastname=request.form.get("lastname"),
+                    dateOfBirth=request.form.get("dateOfBirth"),
+                    email=request.form.get("email"),
+                    password=hash_password(passwordtest),
+                    confirmpassword = hash_password(request.form.get("confirmpassword"))
+                    )
+                    return redirect(url_for('login'))
+                msg="password is not match"
+                return render_template('register.html', form=form,msg=msg)
+            return render_template('loginFail.html')
     return render_template('register.html', form = form)
 
 
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html')
+
 
 
 @app.route('/log', methods = ['GET', 'POST'])
 def login():
+
     form = LoginForm()
     if request.method=='POST':
         login_user = User.objects.filter(email=request.form.get("email")).first()
+        #login_user = User.objects.filter(firstname=request.form.get("firstname")).first()
 
         if login_user:
                 if flask_security.utils.verify_and_update_password(request.form.get('password'), login_user):
                     session['email'] = request.form['email']
-                    return render_template('successLogin.html',firstname=login_user['firstname'],lastname=login_user['lastname'],dateOfBirth=login_user['dateOfBirth'],email=login_user['email'])#'You are logged in as ' + session['email']
-        return render_template('loginFail.html')#'Invalid username/password combination' 
+                    return render_template('profile.html',firstname=login_user['firstname'],lastname=login_user['lastname'],dateOfBirth=login_user['dateOfBirth'],email=login_user['email'])#'You are logged in as ' + session['email']
+        return render_template('loginFail.html')
     return render_template('login.html', form = form)
+
+  
+@app.route('/profile')
+def profile():
+    return render_template('profile.html',email=session['email'])
+
 
 
 
