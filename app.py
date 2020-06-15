@@ -102,15 +102,21 @@ def login():
         if login_user:
                 if flask_security.utils.verify_and_update_password(request.form.get('password'), login_user):
                     session['email'] = request.form['email']
-                    return render_template('profile.html',firstname=login_user['firstname'],lastname=login_user['lastname'],dateOfBirth=login_user['dateOfBirth'],email=login_user['email'])#'You are logged in as ' + session['email']
+                    return render_template('successLogin.html',firstname=login_user['firstname'],lastname=login_user['lastname'],dateOfBirth=login_user['dateOfBirth'],email=login_user['email'])#'You are logged in as ' + session['email']
         return render_template('loginFail.html')
     return render_template('login.html', form = form)
 
   
 @app.route('/profile')
 def profile():
-    return render_template('profile.html',email=session['email'])
-
+    login_user = User.objects.filter(email=session['email']).first()
+    
+    return render_template('profile.html',
+    firstname=login_user['firstname'],
+    lastname=login_user['lastname'],
+    dateOfBirth=login_user['dateOfBirth'],
+    email=login_user['email']
+    )
 
 
 
