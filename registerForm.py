@@ -1,16 +1,17 @@
-from flask_wtf import Form
-from wtforms import TextField, StringField, PasswordField, SubmitField, DateField
+from flask_wtf import FlaskForm
+from wtforms import TextField, StringField, PasswordField, SubmitField
+from wtforms.fields.html5 import DateField
 from wtforms.validators import InputRequired, Length, EqualTo, DataRequired,ValidationError
 
 
 #def validate_password(form, password):
    
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     
     firstname = StringField('firstname')
     lastname = StringField('lastname')
-    dateOfBirth = DateField('Date Of Birth')
+    dateOfBirth = DateField('Date Of Birth', format='%Y-%m-%d')
     email = StringField('Email')
     # password = PasswordField('Password', validators=[
     #     DataRequired(),

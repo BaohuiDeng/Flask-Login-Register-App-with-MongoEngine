@@ -83,7 +83,7 @@ def register():
                     return redirect(url_for('login'))
                 msg="password is not match"
                 return render_template('register.html', form=form,msg=msg)
-            return render_template('loginFail.html')
+            return render_template('registerFail.html')
     return render_template('register.html', form = form)
 
 
@@ -97,7 +97,6 @@ def login():
     form = LoginForm()
     if request.method=='POST':
         login_user = User.objects.filter(email=request.form.get("email")).first()
-        #login_user = User.objects.filter(firstname=request.form.get("firstname")).first()
 
         if login_user:
                 if flask_security.utils.verify_and_update_password(request.form.get('password'), login_user):
